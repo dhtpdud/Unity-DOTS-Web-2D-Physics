@@ -3,28 +3,23 @@ using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
 
+[BurstCompile]
+[RequireMatchingQueriesForUpdate]
 [UpdateInGroup(typeof(Unity.Entities.InitializationSystemGroup))]
-public sealed partial class GameManagerInfoSystem : SystemBase
+public partial struct GameManagerInfoSystem : ISystem
 {
-    public Camera mainCam;
-
-    protected override void OnStartRunning()
+    [BurstCompile]
+    public void OnCreate(ref SystemState state)
     {
-        base.OnStartRunning();
-        mainCam = Camera.main;
         if (!SystemAPI.HasSingleton<GameManagerSingletonComponent>())
-            EntityManager.CreateSingleton<GameManagerSingletonComponent>();
+            state.EntityManager.CreateSingleton<GameManagerSingletonComponent>();
     }
 
-    protected override void OnUpdate()
+    public void OnUpdate(ref SystemState state)
     {
         ref var gameManagerRW = ref SystemAPI.GetSingletonRW<GameManagerSingletonComponent>().ValueRW;
-        gameManagerRW.ScreenPointToRayOfMainCam = mainCam.ScreenPointToRay(Input.mousePosition);
-        gameManagerRW.ScreenToWorldPointMainCam = mainCam.ScreenToWorldPoint(Input.mousePosition).ToFloat2();
-    }
-    public void UpdateSetting()
-    {
-        ref var gameManagerRW = ref SystemAPI.GetSingletonRW<GameManagerSingletonComponent>().ValueRW;
+        gameManagerRW.ScreenPointToRayOfMainCam = GameManager.Instance.mainCam.ScreenPointToRay(Input.mousePosition);
+        gameManagerRW.ScreenToWorldPointMainCam = GameManager.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition).ToFloat2();
 
         gameManagerRW.dragDamping = GameManager.Instance.dragDamping;
         gameManagerRW.dragPower = GameManager.Instance.dragPower;

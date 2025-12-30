@@ -5,39 +5,32 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [BurstCompile]
+[RequireMatchingQueriesForUpdate]
 public partial struct SpawnerSystem : ISystem
 {
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        new TimerJob { deltaTime = SystemAPI.Time.DeltaTime }.ScheduleParallel(state.Dependency).Complete();
-
         EntityCommandBuffer ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-        var parallelWriter = ecb.AsParallelWriter();
         ref var randomSingleton = ref SystemAPI.GetSingletonRW<RandomComponent>().ValueRW;
 
-        state.Dependency = new SpawnJob { random = randomSingleton.Random, parallelWriter = parallelWriter }.ScheduleParallel(state.Dependency);
+        state.Dependency = new SpawnerJob { random = randomSingleton.Random, parallelWriter = ecb.AsParallelWriter(), deltaTime = SystemAPI.Time.DeltaTime }.ScheduleParallel(state.Dependency);
         randomSingleton.UpdateSeed();
     }
-
     [BurstCompile]
-    partial struct TimerJob : IJobEntity
-    {
-        [ReadOnly] public float deltaTime;
-        public void Execute(ref SpawnerComponent spawnerComponent)
-        {
-            if (spawnerComponent.currentSec < spawnerComponent.spawnIntervalSec)
-                spawnerComponent.currentSec += deltaTime;
-        }
-    }
-    [BurstCompile]
-    partial struct SpawnJob : IJobEntity
+    partial struct SpawnerJob : IJobEntity
     {
         [ReadOnly] public Random random;
+        [ReadOnly] public float deltaTime;
         public EntityCommandBuffer.ParallelWriter parallelWriter;
         public void Execute([ChunkIndexInQuery] int chunkIndex, ref SpawnerComponent spawnerComponent, in LocalTransform spawnerTransformComponent)
         {
-            if (spawnerComponent.currentSec < spawnerComponent.spawnIntervalSec || spawnerComponent.spawnedCount >= spawnerComponent.maxCount) return;
+            if (spawnerComponent.spawnedCount >= spawnerComponent.maxCount) return;
+            if (spawnerComponent.currentSec < spawnerComponent.spawnIntervalSec)
+            {
+                spawnerComponent.currentSec += deltaTime;
+                return;
+            }
             Entity spawnedEntity;
             LocalTransform initTransform;
             int remainCount = spawnerComponent.maxCount - spawnerComponent.spawnedCount;

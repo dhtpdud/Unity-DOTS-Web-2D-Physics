@@ -14,20 +14,21 @@ public struct EntityBakeryComponent : IComponentData
 }
 public struct SpawnerComponent : IComponentData
 {
-    public Entity targetEntity;
-    public int maxCount;
-    public int spawnedCount;
+    public Entity targetEntity;     //Spawn 될 Entity
+    public int maxCount;            //총 Spawn 수
+    public int spawnedCount;        //Spawn된 Entity 수
 
-    public float spawnIntervalSec;
-    public float currentSec;
-    public int batchCount;
 
-    public float3 minPos;
-    public float3 maxPos;
+    public float spawnIntervalSec;  //Spawn 간격(초)
+    public float currentSec;        //현재 타이머
+    public int batchCount;          //분할 Spawn 수, 한 프레임에 Spawn될 수 있는 최대 수
 
-    public bool isRandomSize;
-    public float minSize;
-    public float maxSize;
+    public float3 minPos;           //최소 Spawn 위치
+    public float3 maxPos;           //최대 Spawn 위치
+
+    public bool isRandomSize;       //Random 크기 여부
+    public float minSize;           //최소 사이즈
+    public float maxSize;           //최대 사이즈즈
 }
 public struct GameManagerSingletonComponent : IComponentData
 {
@@ -36,14 +37,14 @@ public struct GameManagerSingletonComponent : IComponentData
         readonly public Entity entity;
         readonly public RigidBody rigidbody;
         readonly public ColliderKey colliderKey;
-        readonly public Unity.Physics.Material material;
+        //readonly public Unity.Physics.Material material;
 
-        public DragingEntityInfo(Entity entity, RigidBody rigidbody, ColliderKey colliderKey, Unity.Physics.Material material)
+        public DragingEntityInfo(Entity entity, RigidBody rigidbody, ColliderKey colliderKey/*, Unity.Physics.Material material*/)
         {
             this.entity = entity;
             this.rigidbody = rigidbody;
             this.colliderKey = colliderKey;
-            this.material = material;
+            //this.material = material;
         }
     }
     public DragingEntityInfo dragingEntityInfo;

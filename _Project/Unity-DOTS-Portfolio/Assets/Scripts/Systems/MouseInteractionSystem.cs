@@ -5,10 +5,11 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
-using Material = Unity.Physics.Material;
+//using Material = Unity.Physics.Material;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 [BurstCompile]
+[RequireMatchingQueriesForUpdate]
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial struct MouseInteractionSystem : ISystem, ISystemStartStop
 {
@@ -103,11 +104,11 @@ public partial struct MouseInteractionSystem : ISystem, ISystemStartStop
                 entityPositionOnDown = localTransform.Position.ToFloat2();
                 isDraging = true;
 
-                Material material = Utils.GetMaterial(hitRigidBody, raycastHit.ColliderKey);
-                gameManagerRW.dragingEntityInfo = new GameManagerSingletonComponent.DragingEntityInfo(hitEntity, hitRigidBody, raycastHit.ColliderKey, material);
+                //Material material = Utils.GetMaterial(hitRigidBody, raycastHit.ColliderKey);
+                gameManagerRW.dragingEntityInfo = new GameManagerSingletonComponent.DragingEntityInfo(hitEntity, hitRigidBody, raycastHit.ColliderKey/*, material*/);
 
-                material.RestitutionCombinePolicy = Material.CombinePolicy.Minimum;
-                Utils.SetMaterial(gameManagerRW.dragingEntityInfo.rigidbody, material, raycastHit.ColliderKey);
+                /*material.RestitutionCombinePolicy = Material.CombinePolicy.Minimum;
+                Utils.SetMaterial(gameManagerRW.dragingEntityInfo.rigidbody, material, raycastHit.ColliderKey);*/
             }
         }
     }

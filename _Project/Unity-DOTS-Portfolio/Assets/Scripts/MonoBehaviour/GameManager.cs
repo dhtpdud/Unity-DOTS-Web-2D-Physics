@@ -1,4 +1,3 @@
-using Unity.Entities;
 using UnityEngine;
 
 public class GameManager : SingletonBehaviour<GameManager>
@@ -16,11 +15,5 @@ public class GameManager : SingletonBehaviour<GameManager>
         base.Awake();
         var tokenInit = destroyCancellationToken;
         mainCam ??= Camera.main;
-        //ES3AutoSaveMgr.Current.Load();
-    }
-    public void Start()
-    {
-        gameManagerSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameManagerInfoSystem>();
-        gameManagerSystem.UpdateSetting();
     }
 }

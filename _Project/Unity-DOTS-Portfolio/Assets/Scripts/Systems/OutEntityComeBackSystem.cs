@@ -6,14 +6,10 @@ using Unity.Physics;
 using Unity.Transforms;
 
 [BurstCompile]
+[RequireMatchingQueriesForUpdate]
 partial struct OutEntityComeBackSystem : ISystem, ISystemStartStop
 {
     float2 topRightScreenPoint;
-    [BurstCompile]
-    public void OnCreate(ref SystemState state)
-    {
-        state.RequireForUpdate<GameManagerSingletonComponent>();
-    }
     [BurstCompile]
     public void OnStartRunning(ref SystemState state)
     {
@@ -41,22 +37,22 @@ partial struct OutEntityComeBackSystem : ISystem, ISystemStartStop
             if (localTransform.Position.x > topRightScreenPoint.x)
             {
                 localTransform.Position.x = topRightScreenPoint.x - 1;
-                velocity.Linear.x *= 0.5f;
+                velocity.Linear.x *= -0.5f;
             }
             else if (localTransform.Position.x < -topRightScreenPoint.x)
             {
                 localTransform.Position.x = -topRightScreenPoint.x + 1;
-                velocity.Linear.x *= 0.5f;
+                velocity.Linear.x *= -0.5f;
             }
             if (localTransform.Position.y > topRightScreenPoint.y)
             {
                 localTransform.Position.y = topRightScreenPoint.y - 1;
-                velocity.Linear.y *= 0.5f;
+                velocity.Linear.y *= -0.5f;
             }
             else if (localTransform.Position.y < -topRightScreenPoint.y)
             {
                 localTransform.Position.y = -topRightScreenPoint.y + 1;
-                velocity.Linear.y *= 0.5f;
+                velocity.Linear.y *= -0.5f;
             }
         }
     }
