@@ -1,5 +1,4 @@
 using Unity.Entities;
-using Unity.Scenes;
 using UnityEngine;
 
 public class GameManager : SingletonBehaviour<GameManager>

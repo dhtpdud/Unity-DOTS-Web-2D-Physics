@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
@@ -13,14 +12,13 @@ public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<T>(true);
+                _instance = FindFirstObjectByType<T>(FindObjectsInactive.Include);
                 if(_instance == null)
                     Debug.LogWarning($"[SingletonBehaviour] There is no instance of {typeof(T).Name} in the scene.");
             }
             return _instance;
         }
     }
-    private bool isChecked;
 
     protected virtual void Awake()
     {

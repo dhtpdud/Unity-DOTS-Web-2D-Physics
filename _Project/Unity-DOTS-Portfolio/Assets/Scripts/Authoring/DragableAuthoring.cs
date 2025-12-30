@@ -3,14 +3,12 @@ using UnityEngine;
 
 class DragableAuthoring : MonoBehaviour
 {
-    
-}
-
-class DragableAuthoringBaker : Baker<DragableAuthoring>
-{
-    public override void Bake(DragableAuthoring authoring)
+    class DragableAuthoringBaker : Baker<DragableAuthoring>
     {
-        var entity = GetEntity(authoring.gameObject, TransformUsageFlags.Dynamic);
-        AddComponent<DragableTag>(entity);
+        public override void Bake(DragableAuthoring authoring)
+        {
+            var entity = GetEntity(authoring.gameObject, TransformUsageFlags.Dynamic);
+            AddComponent<DragableTag>(entity);
+        }
     }
 }
