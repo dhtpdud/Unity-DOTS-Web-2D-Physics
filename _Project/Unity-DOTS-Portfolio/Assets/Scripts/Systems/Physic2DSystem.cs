@@ -36,7 +36,7 @@ public partial struct Physic2DSystem : ISystem, ISystemStartStop
         GameManagerSingletonComponent gmComponent = SystemAPI.GetSingleton<GameManagerSingletonComponent>();
         state.Dependency = new Physics2DJob { maxVelocity = gmComponent.physicMaxVelocity }.ScheduleParallel(state.Dependency);
     }
-    //[BurstCompile]
+    [BurstCompile]
     partial struct Physics2DJob : IJobEntity
     {
         [ReadOnly] public float maxVelocity;
@@ -45,10 +45,12 @@ public partial struct Physic2DSystem : ISystem, ISystemStartStop
             if (math.length(physicsVelocity.Linear) > maxVelocity)
                 physicsVelocity.Linear = math.normalize(physicsVelocity.Linear) * maxVelocity;
 
+            #region Invalid worldAABB. Object is too large or too far away from the origin. 버그 방지
             if (physicsVelocity.Linear.z != 0)
                 physicsVelocity.Linear.z = 0;
             if (localTransform.Position.z != 0)
                 localTransform.Position = new float3(localTransform.Position.x, localTransform.Position.y, 0);
+            #endregion
 
             if (physicsMass.InverseInertia.x == 0 && physicsMass.InverseInertia.y == 0) return;
 
