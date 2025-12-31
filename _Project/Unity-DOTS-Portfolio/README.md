@@ -1,7 +1,7 @@
 # Unity-DOTS-Portfolio
 유니티 DOTS 포트폴리오 Repo입니다.
 
-해당 프로젝트에는 제가 자주사용하는 Random System, Entity Spawner System, Entity Drag System 이 포함되어 있습니다.
+해당 프로젝트에는 제가 자주사용하는 Random System, Entity Spawner System, Entity Drag System 이 포함되어 있습니다.  
 그외, 2D Physics 환경을 구현하기 위한 Physic2DSystem또한 포함되어 있습니다.
 
 ## [Random System](https://github.com/dhtpdud/Unity-DOTS-Web-2D-Physics/blob/main/_Project/Unity-DOTS-Portfolio/Assets/Scripts/Systems/GameManagerSystem.cs#L29-L49)
